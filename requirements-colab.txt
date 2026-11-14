@@ -1,0 +1,6 @@
+# Colab ya trae torch, torchvision, numpy y pillow con soporte de GPU: no los reinstalamos.
+# Mismas versiones que uv.lock para que local y Colab se comporten igual.
+diffusers==0.43.0
+transformers==5.23.0
+accelerate==1.15.0
+gradio==6.32.0
