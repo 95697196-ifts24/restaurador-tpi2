@@ -1,0 +1,24 @@
+[project]
+name = "restaurador-tpi2"
+version = "0.1.0"
+description = "Ampliador de fotos familiares con difusión que muestra qué inventó la IA (TPI 2 PDI)"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "accelerate>=1.15.0",
+    "diffusers>=0.43.0",
+    "gradio>=6.32.0",
+    "numpy>=2.5.4",
+    "pillow>=13.0.0",
+    "torch>=2.15.0",
+    "transformers>=5.23.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
