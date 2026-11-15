@@ -52,9 +52,14 @@ def cargar_pipeline():
         from diffusers import StableDiffusionUpscalePipeline
 
         if hay_gpu():
+            # float16 (media precisión) usa la mitad de memoria en la GPU...
             pipe = StableDiffusionUpscalePipeline.from_pretrained(
-                MODELO_DIFUSION, torch_dtype=torch.float16
+                MODELO_DIFUSION, dtype=torch.float16
             ).to("cuda")
+            # ...pero el VAE (la parte que convierte el resultado interno en píxeles)
+            # se desborda en float16. Lo dejamos fijo en float32 para que la librería
+            # no tenga que convertirlo de ida y vuelta en cada ampliación.
+            pipe.vae.to(torch.float32)
         else:
             pipe = StableDiffusionUpscalePipeline.from_pretrained(MODELO_DIFUSION)
         pipe.enable_attention_slicing()  # usa menos memoria a cambio de un poco de velocidad
