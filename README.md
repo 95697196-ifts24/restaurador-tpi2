@@ -108,14 +108,14 @@ En su casa, los fines de semana, foto por foto. Tiene tiempo pero poca paciencia
 ## 5. Instalación y uso
 
 ### En Google Colab (recomendado si no tenés GPU de 6 GB o más)
-1. Abrí [notebooks/ejecutar_en_colab.ipynb](notebooks/ejecutar_en_colab.ipynb) en Colab
-   (Archivo → Abrir cuaderno → GitHub → pegá la URL de este repositorio).
+1. Abrí el cuaderno con este botón:
+   [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/95697196-ifts24/restaurador-tpi2/blob/main/notebooks/ejecutar_en_colab.ipynb)
 2. *Entorno de ejecución → Cambiar tipo → GPU T4*.
 3. Ejecutá las celdas en orden y abrí el link `https://….gradio.live`.
 
 ### En local (con `uv`)
 ```bash
-git clone https://github.com/USUARIO/restaurador-tpi2.git   # ✏️ COMPLETAR usuario
+git clone https://github.com/95697196-ifts24/restaurador-tpi2.git
 cd restaurador-tpi2
 uv sync            # crea el entorno con Python 3.12 y las versiones exactas de uv.lock
 uv run pytest      # (opcional) corre las pruebas
