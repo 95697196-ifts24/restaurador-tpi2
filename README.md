@@ -6,8 +6,7 @@ usando un **modelo de difusión**, y que **muestra qué parte del resultado inve
 > Trabajo Integrador 2 · Procesamiento Digital de Imágenes · IFTS N.º 24 · 2026
 > Autor/a: ✏️ COMPLETAR · Sub-tarea elegida: **A · Super-resolución**
 
-![Captura de la aplicación](docs/capturas/app.png)
-<!-- ✏️ COMPLETAR: guardá una captura de la app funcionando en docs/capturas/app.png -->
+![Captura de la aplicación funcionando en Colab: comparador, mapa de lo inventado e informe](docs/capturas/app.png)
 
 ---
 
@@ -103,7 +102,9 @@ En su casa, los fines de semana, foto por foto. Tiene tiempo pero poca paciencia
 **Hardware con el que lo probé**
 - Local: notebook con GeForce MX230 (**2 GB de VRAM**) y 8 GB de RAM → corren la interfaz,
   la parte clásica y CLIP, pero **no** el modelo de difusión (necesita ~3 GB solo de pesos).
-- Google Colab con GPU **T4 (15 GB)** → corre todo el sistema. ✏️ COMPLETAR: tiempo por foto medido en Colab.
+- Google Colab con GPU **Tesla T4 (15 GB)** y **Python 3.13** (el que trae Colab) → corre todo el sistema.
+  La descarga del modelo (3,48 GB) tardó ~30 s; con el modelo cargado, cada ampliación
+  de 160 → 640 px tarda unos **15 segundos** (4 ampliaciones en ~1 minuto).
 
 ## 5. Instalación y uso
 
@@ -128,7 +129,9 @@ Sin GPU funciona, pero la foto se limita a 128 px y cada ampliación tarda mucho
 3. Tocá **Ampliar foto**. 4. Deslizá el comparador, mirá el **mapa rojo** y leé el informe.
 5. **Generar otra versión** repite con otro ruido inicial: lo que cambia es inventado.
 
-✏️ COMPLETAR: capturas de ejemplos en `docs/capturas/` (comparador, mapa, informe).
+La captura del principio muestra un uso real: la locomotora, nivel «Mucho», versión 3196.
+El informe dice que el **3 %** de la imagen fue dibujado por la IA y que la foto, al achicarla
+de nuevo, se diferencia solo un **2,1 %** del original. CLIP reconoce «vehículo o máquina» antes y después.
 
 ## 6. Conceptos de procesamiento digital aplicados
 
@@ -167,17 +170,45 @@ foto original: pestañas, arrugas, texturas de tela, **letras y números**. Esos
 existen en el archivo**; el modelo los dibuja de forma plausible.
 
 **Cómo se ve en la app.** El mapa rojo resta la imagen de la IA menos la bicúbica: en rojo
-queda lo que la IA agregó y que no se deduce de los píxeles originales.
-✏️ COMPLETAR: captura del mapa en `docs/capturas/mapa.png`.
+queda lo que la IA agregó y que no se deduce de los píxeles originales (ver la
+[captura del principio](docs/capturas/app.png): bordes de la placa, vías, pasto y nubes).
 
 **Qué advertencia le doy a Norma.** "La foto ampliada con IA no es un documento. Las caras,
 letras y texturas finas pueden no ser las reales." Si CLIP detecta un rostro, se agrega un
 aviso específico. El PNG descargado lleva la leyenda en la imagen y en sus metadatos.
 
-**Un ejemplo en el que el modelo inventó.** ✏️ COMPLETAR con la prueba de laboratorio de
-Colab (`ejemplos/locomotora_con_numero.jpg`): en la foto chica el número pintado de la
-locomotora es ilegible; contá qué dígitos dibujó la IA, si coinciden con la foto real de
-`ejemplos/referencia/`, y qué PSNR tuvo frente a la bicúbica.
+**Un ejemplo en el que el modelo inventó: el número de la locomotora.** Para poder
+*verificar*, hice una prueba de laboratorio en Colab: tomé mi foto en 640 px (la "verdad"),
+la achiqué 4 veces a 160 px y la amplié de nuevo con cada método.
+
+![Prueba de laboratorio: foto real, entrada chica, bicúbica y la IA en tres niveles y dos semillas, con zoom al número](docs/capturas/laboratorio_locomotora.png)
+
+- En la foto real se lee **7763** en dos placas. En la entrada chica el número ocupa unos
+  3 o 4 píxeles de alto: **ya no existe en el archivo**.
+- La **bicúbica** deja las placas como manchas borrosas: no recupera el número, pero tampoco inventa.
+- La **IA** dibuja en las placas **formas que parecen letras** (trazos tipo "ʋ9" o "uo"), que no
+  son el 7763 ni ningún número. Son *creíbles* a primera vista y **falsas**.
+- Con **otra semilla** (mismo nivel, misma foto) la IA dibuja **otras** pseudo-letras.
+  Lo que cambia entre versiones es inventado con seguridad.
+
+| Método | PSNR contra la foto real | Lectura |
+|---|---|---|
+| Bicúbica (clásico) | 24,3 dB | Línea base: solo los píxeles originales |
+| IA · Poco | **24,8 dB** | Apenas más cerca de la verdad que la bicúbica |
+| IA · Medio | 24,3 dB | Igual que la bicúbica |
+| IA · Mucho | **23,7 dB** | La más nítida… y la **más lejos** de la verdad |
+| IA · Poco · otra semilla | 24,8 dB | Mismo PSNR, pero **letras inventadas distintas** |
+
+([Salida original de la celda en Colab](docs/capturas/laboratorio_psnr.png))
+
+Dos conclusiones:
+1. **Más nítida no es más verdadera.** El nivel «Mucho» se ve más definido y tiene el peor PSNR.
+2. **El PSNR no detecta lo inventado.** Las dos semillas tienen el mismo PSNR y dibujaron
+   cosas diferentes en las placas. La métrica mide parecido promedio de píxeles, no verdad.
+
+Lo que no está en la foto no vuelve: ni el método clásico ni la IA pueden leer un número
+que ocupaba 3 píxeles. Si Norma necesitara saber el número de la locomotora (o el nombre
+en un cartel, o una fecha escrita al dorso), tendría que buscar otra fuente.
 
 **Un error del analizador.** Durante el desarrollo, CLIP clasificó la locomotora como
 **"animal" (37,7 %)**, porque entre las frases candidatas no había ninguna de vehículos:
@@ -208,6 +239,8 @@ código; puedo explicar cada función. ✏️ COMPLETAR: confirmalo cuando lo ha
 ## 10. Limitaciones conocidas
 
 - La difusión **no corre en mi PC** (2 GB de VRAM): requiere Colab o una GPU de 6 GB o más.
+- En local el proyecto usa Python 3.12 (`uv`); Colab trae Python 3.13 y su propio PyTorch.
+  Las versiones de diffusers, transformers y Gradio son las mismas en los dos (`requirements-colab.txt`).
 - La foto se achica a 256 px de lado antes de ampliar (salida máx. 1024 px): fotos grandes pierden detalle.
 - El mapa rojo es una **aproximación**: la bicúbica también suaviza, así que el mapa marca
   "lo que la IA agregó respecto de un método clásico", no una verdad absoluta.
