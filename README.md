@@ -3,8 +3,8 @@
 Herramienta que **agranda 4 veces** fotos familiares chicas o escaneadas en baja resolución
 usando un **modelo de difusión**, y que **muestra qué parte del resultado inventó la IA**.
 
-> Trabajo Integrador 2 · Procesamiento Digital de Imágenes · IFTS N.º 24 · 2026
-> Autor/a: ✏️ COMPLETAR · Sub-tarea elegida: **A · Super-resolución**
+> Trabajo Integrador 2 · Procesamiento Digital de Imágenes · IFTS N.º 24 · 2026  
+> Autor/a: **José Jesús Navas Astudillo** · Sub-tarea elegida: **A · Super-resolución**
 
 ![Captura de la aplicación funcionando en Colab: comparador, mapa de lo inventado e informe](docs/capturas/app.png)
 
@@ -12,16 +12,10 @@ usando un **modelo de difusión**, y que **muestra qué parte del resultado inve
 
 ## 1. El problema
 
-Muchas familias tienen fotos viejas que solo existen como **archivos chicos** (escaneos
-rápidos, fotos de fotos sacadas con el celular, imágenes reenviadas por WhatsApp). Al
-agrandarlas se ven pixeladas. Las apps de "mejorar foto" las dejan nítidas, pero **no avisan
-que los detalles nuevos fueron dibujados por la IA**: la cara de la abuela puede quedar
-más joven, con otros ojos, o directamente parecerse a otra persona.
+Muchas familias tienen fotos viejas que solo existen como **archivos chicos** (escaneos rápidos, fotos de fotos sacadas con el celular, imágenes reenviadas por WhatsApp). 
+Al agrandarlas se ven pixeladas. Las apps de "mejorar foto" las dejan nítidas, pero **no avisan que los detalles nuevos fueron dibujados por la IA**: la cara de la abuela puede quedar más joven, con otros ojos, o directamente parecerse a otra persona.
 
-**Declaración del proyecto:** una herramienta local que permite a una persona sin
-conocimientos técnicos ampliar fotos familiares de baja resolución, mostrando lado a lado el
-resultado clásico y el de la IA, y marcando en un mapa qué detalles fueron reconstruidos por
-el modelo, para que decida si la foto sigue siendo fiel antes de compartirla.
+**Declaración del proyecto:** una herramienta local que permite a una persona sin conocimientos técnicos ampliar fotos familiares de baja resolución, mostrando lado a lado el resultado clásico y el de la IA, y marcando en un mapa qué detalles fueron reconstruidos por el modelo, para que decida si la foto sigue siendo fiel antes de compartirla.
 
 ## 2. Persona usuaria
 
@@ -37,8 +31,7 @@ Problema actual:
  Cuando las agrando para imprimirlas o mandarlas al grupo de la familia, se ven todas cuadraditas."
 
 Solución actual:
-Probó una app de "mejorar fotos": quedaron nítidas, pero su hermana le dijo que el
-papá "no parecía el papá". No sabe qué cambió ni por qué.
+Probó una app de "mejorar fotos": quedaron nítidas, pero su hermana le dijo que el papá "no parecía el papá". No sabe qué cambió ni por qué.
 
 Frustraciones:
 - No sabe qué parte de la foto "mejorada" es real y qué parte inventó el programa.
@@ -52,7 +45,6 @@ Objetivos:
 Contexto de uso:
 En su casa, los fines de semana, foto por foto. Tiene tiempo pero poca paciencia para configurar cosas.
 ```
-<!-- ✏️ COMPLETAR: revisá la persona y ajustala con detalles tuyos; es tu decisión de diseño. -->
 
 ## 3. Cómo funciona (arquitectura)
 
@@ -100,8 +92,7 @@ En su casa, los fines de semana, foto por foto. Tiene tiempo pero poca paciencia
 | Código de este repositorio | — | [MIT](LICENSE) |
 
 **Hardware con el que lo probé**
-- Local: notebook con GeForce MX230 (**2 GB de VRAM**) y 8 GB de RAM → corren la interfaz,
-  la parte clásica y CLIP, pero **no** el modelo de difusión (necesita ~3 GB solo de pesos).
+- Local: notebook con GeForce MX230 (**2 GB de VRAM**) y 8 GB de RAM → corren la interfaz, la parte clásica y CLIP, pero **no** el modelo de difusión (necesita ~3 GB solo de pesos).
 - Google Colab con GPU **Tesla T4 (15 GB)** y **Python 3.13** (el que trae Colab) → corre todo el sistema.
   La descarga del modelo (3,48 GB) tardó ~30 s; con el modelo cargado, cada ampliación
   de 160 → 640 px tarda unos **15 segundos** (4 ampliaciones en ~1 minuto).
@@ -162,29 +153,19 @@ de nuevo, se diferencia solo un **2,1 %** del original. CLIP reconoce «vehícul
 
 ## 8. Qué es real y qué es inventado
 
-**Qué hace el modelo.** El ampliador x4 parte de una imagen 4 veces más grande llena de ruido
-y la "limpia" en 25 pasos, guiándose para que, al achicarla, se parezca a la foto de Norma.
-Lo que **sí respeta** es lo que sobrevive en la foto chica: formas grandes, colores generales,
-posición de las cosas. Lo que **no puede recuperar** es todo lo más chico que un píxel de la
-foto original: pestañas, arrugas, texturas de tela, **letras y números**. Esos detalles **no
-existen en el archivo**; el modelo los dibuja de forma plausible.
+**Qué hace el modelo.** El ampliador x4 parte de una imagen 4 veces más grande llena de ruido y la "limpia" en 25 pasos, guiándose para que, al achicarla, se parezca a la foto de Norma.
+Lo que **sí respeta** es lo que sobrevive en la foto chica: formas grandes, colores generales, posición de las cosas. Lo que **no puede recuperar** es todo lo más chico que un píxel de la foto original: pestañas, arrugas, texturas de tela, **letras y números**. Esos detalles **no existen en el archivo**; el modelo los dibuja de forma plausible.
 
-**Cómo se ve en la app.** El mapa rojo resta la imagen de la IA menos la bicúbica: en rojo
-queda lo que la IA agregó y que no se deduce de los píxeles originales (ver la
-[captura del principio](docs/capturas/app.png): bordes de la placa, vías, pasto y nubes).
+**Cómo se ve en la app.** El mapa rojo resta la imagen de la IA menos la bicúbica: en rojo queda lo que la IA agregó y que no se deduce de los píxeles originales (ver la [captura del principio](docs/capturas/app.png): bordes de la placa, vías, pasto y nubes).
 
-**Qué advertencia le doy a Norma.** "La foto ampliada con IA no es un documento. Las caras,
-letras y texturas finas pueden no ser las reales." Si CLIP detecta un rostro, se agrega un
-aviso específico. El PNG descargado lleva la leyenda en la imagen y en sus metadatos.
+**Qué advertencia le doy a Norma.** "La foto ampliada con IA no es un documento. Las caras, letras y texturas finas pueden no ser las reales." Si CLIP detecta un rostro, se agrega un aviso específico. El PNG descargado lleva la leyenda en la imagen y en sus metadatos.
 
-**Un ejemplo en el que el modelo inventó: el número de la locomotora.** Para poder
-*verificar*, hice una prueba de laboratorio en Colab: tomé mi foto en 640 px (la "verdad"),
+**Un ejemplo en el que el modelo inventó: el número de la locomotora.** Para poder *verificar*, hice una prueba de laboratorio en Colab: tomé mi foto en 640 px (la "verdad"),
 la achiqué 4 veces a 160 px y la amplié de nuevo con cada método.
 
 ![Prueba de laboratorio: foto real, entrada chica, bicúbica y la IA en tres niveles y dos semillas, con zoom al número](docs/capturas/laboratorio_locomotora.png)
 
-- En la foto real se lee **7763** en dos placas. En la entrada chica el número ocupa unos
-  3 o 4 píxeles de alto: **ya no existe en el archivo**.
+- En la foto real se lee **7763** en dos placas. En la entrada chica el número ocupa unos 3 o 4 píxeles de alto: **ya no existe en el archivo**.
 - La **bicúbica** deja las placas como manchas borrosas: no recupera el número, pero tampoco inventa.
 - La **IA** dibuja en las placas **formas que parecen letras** (trazos tipo "ʋ9" o "uo"), que no
   son el 7763 ni ningún número. Son *creíbles* a primera vista y **falsas**.
@@ -230,11 +211,17 @@ lógica de *vibe engineering* de la consigna.
 |---|---|
 | Sub-tarea A (super-resolución), persona del archivo familiar, ejecutar en Colab por falta de VRAM | Arquitectura en 4 módulos y nombres de funciones |
 | Usar mis fotos del TP1 como ejemplos | Usar la bicúbica como "regla" y el mapa IA − bicúbica |
-| ✏️ COMPLETAR: qué cambiaste o rechazaste | Botón "otra versión" para mostrar lo inventado; aviso en metadatos PNG |
-| ✏️ COMPLETAR | Pruebas automáticas, cuaderno de Colab y este README como borrador |
+| Probar todo en Colab con GPU T4 y documentar los resultados reales con mis propias capturas (sección 8) | Botón "otra versión" para mostrar lo inventado; aviso en metadatos PNG |
+| Al ver que en la foto ampliada no se leía el número de la locomotora, pedir que se verificara qué inventaba la IA | Cómo verificarlo: la prueba de laboratorio (achicar ×4 mi foto, ampliarla y medir el PSNR contra el original) |
+| Avisar los problemas que encontré al usarlo: la celda de la app "no terminaba" y el botón ■ no apagaba el servidor | Reescribir las instrucciones del cuaderno y hacer reejecutable la celda de instalación |
+| Revisar cada propuesta antes de aceptarla, y rechazarla o pedir cambios cuando no me convencía | Pruebas automáticas, cuaderno de Colab y este README como borrador |
+
+**Cómo trabajamos:** yo definí el problema, la persona y los criterios; el agente propuso y
+escribió el código; yo lo ejecuté en Colab, encontré los problemas reales y decidí qué quedaba.
+El caso de la locomotora (sección 8) nació de una observación mía al usar la app.
 
 Las instrucciones para el agente están en [AGENTS.md](AGENTS.md). Revisé y ejecuté todo el
-código; puedo explicar cada función. ✏️ COMPLETAR: confirmalo cuando lo hayas leído entero.
+código; puedo explicar cada función.
 
 ## 10. Limitaciones conocidas
 
@@ -255,3 +242,4 @@ código; puedo explicar cada función. ✏️ COMPLETAR: confirmalo cuando lo ha
 | `OPENSSL_Uplink ... no OPENSSL_Applink` al iniciar la app (Windows) | Está definida la variable `SSLKEYLOGFILE`: borrala (`$env:SSLKEYLOGFILE=$null` en PowerShell) |
 | "Se terminó la memoria de la placa de video" | Usá una foto más chica o Colab con GPU |
 | La primera ampliación tarda mucho | Está descargando el modelo (~3 GB); las siguientes son más rápidas |
+| Después de "Guardar una copia en GitHub" desde Colab, el cuaderno volvió a una versión vieja | Colab sube **su** copia y pisa la del repositorio. Abrí el cuaderno con el botón del README y no lo guardes en GitHub: los cambios se hacen en el repositorio |
