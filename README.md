@@ -239,7 +239,7 @@ código; puedo explicar cada función.
 | Síntoma | Solución |
 |---|---|
 | `invalid peer certificate: UnknownIssuer` al hacer `uv sync` | La red o el antivirus intercepta HTTPS: `uv sync --system-certs` |
-| `OPENSSL_Uplink ... no OPENSSL_Applink` al iniciar la app (Windows) | Está definida la variable `SSLKEYLOGFILE`: borrala (`$env:SSLKEYLOGFILE=$null` en PowerShell) |
+| `OPENSSL_Uplink ... no OPENSSL_Applink` al iniciar la app (Windows) | Está definida la variable `SSLKEYLOGFILE` (la crea el antivirus Avast, apuntando a `aswMonFltProxy`) y choca con el OpenSSL que usa Gradio: borrala antes de iniciar (`$env:SSLKEYLOGFILE=$null` en PowerShell; vale solo para esa ventana) |
 | "Se terminó la memoria de la placa de video" | Usá una foto más chica o Colab con GPU |
 | La primera ampliación tarda mucho | Está descargando el modelo (~3 GB); las siguientes son más rápidas |
 | Después de "Guardar una copia en GitHub" desde Colab, el cuaderno volvió a una versión vieja | Colab sube **su** copia y pisa la del repositorio. Abrí el cuaderno con el botón del README y no lo guardes en GitHub: los cambios se hacen en el repositorio |
