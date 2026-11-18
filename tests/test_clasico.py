@@ -4,7 +4,7 @@ import numpy as np
 from PIL import Image
 
 from restaurador import clasico
-from restaurador.difusion import rellenar_a_multiplo
+from restaurador.difusion import SEMILLA_POR_DEFECTO, normalizar_semilla, rellenar_a_multiplo
 
 
 def foto_de_prueba(ancho=60, alto=40, modo="RGB"):
@@ -67,3 +67,9 @@ def test_relleno_llega_a_multiplo_de_64_sin_tocar_la_foto():
     rellena = rellenar_a_multiplo(foto)
     assert rellena.size == (128, 128)
     assert np.array_equal(np.asarray(rellena)[:70, :100], np.asarray(foto))
+
+
+def test_semilla_vacia_usa_la_de_por_defecto():
+    """Si se borra el campo "Número de versión", Gradio manda None: no debe romper."""
+    assert normalizar_semilla(None) == SEMILLA_POR_DEFECTO
+    assert normalizar_semilla(42.0) == 42

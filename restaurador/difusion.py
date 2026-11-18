@@ -31,7 +31,22 @@ PASOS = 25
 LADO_MAXIMO_GPU = 256  # 256 -> 1024 px, entra cómodo en una GPU T4 de Colab
 LADO_MAXIMO_CPU = 128  # sin GPU es MUY lento: limitamos a 128 -> 512 px
 
+# Semilla que usamos si la persona deja vacío el campo "Número de versión".
+SEMILLA_POR_DEFECTO = 1234
+
 _pipeline = None  # el modelo se carga una sola vez y se reutiliza
+
+
+def normalizar_semilla(semilla) -> int:
+    """Convierte lo que llega del campo "Número de versión" en un entero válido.
+
+    Si la persona borra el número, Gradio entrega ``None`` y ``int(None)``
+    rompería la app con un error técnico. En ese caso usamos la semilla por
+    defecto, así el resultado sigue siendo repetible.
+    """
+    if semilla is None:
+        return SEMILLA_POR_DEFECTO
+    return int(semilla)
 
 
 def hay_gpu() -> bool:
@@ -83,7 +98,8 @@ def rellenar_a_multiplo(imagen: Image.Image, multiplo: int = 64) -> Image.Image:
     return Image.fromarray(np.pad(matriz, relleno, mode="edge"))
 
 
-def ampliar_con_ia(imagen: Image.Image, noise_level: int, semilla: int = 1234) -> Image.Image:
+def ampliar_con_ia(imagen: Image.Image, noise_level: int,
+                   semilla: int = SEMILLA_POR_DEFECTO) -> Image.Image:
     """Amplía la foto x4 con el modelo de difusión.
 
     ``semilla`` fija el ruido inicial: con la misma semilla, la misma foto y el

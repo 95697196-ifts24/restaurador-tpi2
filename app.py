@@ -25,6 +25,8 @@ def procesar(imagen, nivel, semilla, progress=gr.Progress()):
         raise gr.Error("Primero subí una foto (o elegí uno de los ejemplos de abajo).")
     if nivel not in textos.NIVELES:
         raise gr.Error("Elegí cuánto puede inventar la IA.")
+    # Si el campo "Número de versión" quedó vacío, usamos uno por defecto.
+    semilla = difusion.normalizar_semilla(semilla)
 
     progress(0.05, desc="Preparando tu foto…")
     lado = difusion.lado_maximo()
@@ -38,7 +40,7 @@ def procesar(imagen, nivel, semilla, progress=gr.Progress()):
 
     progress(0.30, desc="La IA está reconstruyendo detalles, quitando ruido paso a paso…")
     try:
-        con_ia = difusion.ampliar_con_ia(original, textos.NIVELES[nivel], semilla=int(semilla))
+        con_ia = difusion.ampliar_con_ia(original, textos.NIVELES[nivel], semilla=semilla)
     except RuntimeError as error:  # incluye "out of memory" de la GPU
         if "out of memory" in str(error).lower():
             raise gr.Error("Se terminó la memoria de la placa de video. Probá con una foto más chica.") from error
@@ -60,7 +62,7 @@ def procesar(imagen, nivel, semilla, progress=gr.Progress()):
         "Semilla": semilla,
     })
     informe = textos.informe(
-        nivel=nivel, semilla=int(semilla), fue_reducida=fue_reducida, lado=lado,
+        nivel=nivel, semilla=semilla, fue_reducida=fue_reducida, lado=lado,
         pct_cambiado=pct, fidelidad=fidelidad, comparacion=comparacion,
         hay_gpu=difusion.hay_gpu(),
     )
